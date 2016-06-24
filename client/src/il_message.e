@@ -18,40 +18,40 @@ feature {NONE} -- Initialization
 		require
 			a_fetch_not_void: a_fetch /= Void
 		local
-			parser: IL_MESSAGE_PARSER
-			number_of_lines: STRING
+			l_parser: IL_MESSAGE_PARSER
+			l_number_of_lines: STRING
 		do
-			create parser.make_from_fetch (a_fetch)
+			create l_parser.make_from_fetch (a_fetch)
 			sequence_number := a_fetch.sequence_number
-			uid := a_fetch.get_value (uid_data_item).to_integer
-			body_text := a_fetch.get_value (text_data_item)
-			body_size := a_fetch.get_size (text_data_item)
-			size := a_fetch.get_value (size_data_item).to_integer
-			flags := a_fetch.get_value (flags_data_item).split (' ')
+			uid := a_fetch.value (uid_data_item).to_integer
+			body_text := a_fetch.value (text_data_item)
+			body_size := a_fetch.size (text_data_item)
+			size := a_fetch.value (size_data_item).to_integer
+			flags := a_fetch.value (flags_data_item).split (' ')
 
-			header_text := a_fetch.get_value (header_data_item)
+			header_text := a_fetch.value (header_data_item)
 			create header_parser.make_from_text (header_text)
 
-			from_address := parser.get_from
-			reply_to := parser.get_addresses_from_envelope (3)
-			to_address := parser.get_addresses_from_envelope (4)
-			cc := parser.get_addresses_from_envelope (5)
-			bcc := parser.get_addresses_from_envelope (6)
-			subject := parser.subject
-			date := parser.date
-			date_string := parser.date_string
-			internaldate := parser.internaldate
+			from_address := l_parser.get_from
+			reply_to := l_parser.get_addresses_from_envelope (3)
+			to_address := l_parser.get_addresses_from_envelope (4)
+			cc := l_parser.get_addresses_from_envelope (5)
+			bcc := l_parser.get_addresses_from_envelope (6)
+			subject := l_parser.subject
+			date := l_parser.date
+			date_string := l_parser.date_string
+			internaldate := l_parser.internaldate
 
 			mailbox_name := current_mailbox.name
 
-			body_type := parser.body_field (2)
-			body_subtype := parser.body_field (4)
-			body_id := parser.body_field (12)
-			body_description := parser.body_field (14)
-			body_encoding := parser.body_field (16)
-			number_of_lines := parser.body_field (18)
-			if number_of_lines /~ "NIL" and not number_of_lines.is_empty then
-				body_number_of_lines := number_of_lines.to_integer
+			body_type := l_parser.body_field (2)
+			body_subtype := l_parser.body_field (4)
+			body_id := l_parser.body_field (12)
+			body_description := l_parser.body_field (14)
+			body_encoding := l_parser.body_field (16)
+			l_number_of_lines := l_parser.body_field (18)
+			if l_number_of_lines /~ "NIL" and not l_number_of_lines.is_empty then
+				body_number_of_lines := l_number_of_lines.to_integer
 			else
 				body_number_of_lines := -1
 			end

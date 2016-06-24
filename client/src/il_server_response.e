@@ -106,18 +106,18 @@ feature -- Basic operations
 		require
 			a_text_not_empty: a_text /= Void and then not a_text.is_empty
 		local
-			parser: IL_FETCH_PARSER
+			l_parser: IL_FETCH_PARSER
 		do
-			create parser.make_from_text (a_text)
-			if parser.is_fetch_response then
+			create l_parser.make_from_text (a_text)
+			if l_parser.is_fetch_response then
 				debugger.debug_print (debugger.debug_info, "FETCH response starting")
-				create current_fetch.make_with_sequence_number (parser.sequence_number)
+				create current_fetch.make_with_sequence_number (l_parser.sequence_number)
 				last_fetch_complete := false
-				if parser.parse_data (current_fetch) then
+				if l_parser.parse_data (current_fetch) then
 					set_fetch_complete
 				end
 			else
-				untagged_responses.extend (parser.text)
+				untagged_responses.extend (l_parser.text)
 			end
 		end
 
@@ -189,10 +189,10 @@ feature -- Basic operations
 			last_fetch_not_complete: not last_fetch_complete
 			a_text_not_empty: a_text /= Void and then not a_text.is_empty
 		local
-			parser: IL_FETCH_PARSER
+			l_parser: IL_FETCH_PARSER
 		do
-			create parser.make_from_text (a_text)
-			if parser.parse_data (current_fetch) then
+			create l_parser.make_from_text (a_text)
+			if l_parser.parse_data (current_fetch) then
 				set_fetch_complete
 			end
 		end

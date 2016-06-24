@@ -116,15 +116,15 @@ feature -- Basic operations
 	status_data: STRING_TABLE [INTEGER]
 			-- Return the status data contained in the untagged response `text'
 		local
-			data: STRING
+			l_data: STRING
 		do
 			regex.compile (Status_data_response_pattern)
 			if regex.matches (text) then
-				data := regex.captured_substring (1)
+				l_data := regex.captured_substring (1)
 				regex.compile (Status_data_pattern)
 				create Result.make (0)
 				from
-					regex.match (data)
+					regex.match (l_data)
 				until
 					not regex.has_matched
 				loop
@@ -139,15 +139,15 @@ feature -- Basic operations
 	search_results: LIST [INTEGER]
 			-- Return the ids of the messages in the search result
 		local
-			ids: STRING
+			l_ids: STRING
 		do
 			create {LINKED_LIST [INTEGER]}Result.make
 			regex.compile (Search_result_pattern)
 			if regex.matches (text) then
-				ids := regex.captured_substring (1)
+				l_ids := regex.captured_substring (1)
 				regex.compile (Integer_pattern)
 				from
-					regex.match (ids)
+					regex.match (l_ids)
 				until
 					not regex.has_matched
 				loop
@@ -186,7 +186,7 @@ feature -- Basic operations
 			Result := regex.matches (text)
 		end
 
-feature {NONE} -- Constants
+feature {NONE} -- Regex Constants
 
 	Connection_ok_pattern: STRING = "^\* OK (.*)$"
 			-- Represents the first message sent by the server when opening a connection

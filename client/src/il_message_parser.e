@@ -30,16 +30,16 @@ feature -- Basic operaion
 	get_from: IL_ADDRESS
 			-- Parse the from field from the envelope
 		local
-			envelope: STRING
-			addresses: STRING
+			l_envelope: STRING
+			l_addresses: STRING
 		do
 			create Result.make_empty
-			envelope := fetch.get_value (envelope_data_item)
+			l_envelope := fetch.value (envelope_data_item)
 			regex.compile (envelope_pattern)
-			if regex.matches (envelope) then
-				addresses := regex.captured_substring (6)
+			if regex.matches (l_envelope) then
+				l_addresses := regex.captured_substring (6)
 				regex.compile (Address_pattern)
-				if regex.matches (addresses) then
+				if regex.matches (l_addresses) then
 					Result := address_from_matched_regex
 				end
 			end
@@ -50,24 +50,24 @@ feature -- Basic operaion
 		require
 			correct_position: a_position >= 1 and then a_position <= 6
 		local
-			envelope: STRING
-			addresses: STRING
-			address: IL_ADDRESS
+			l_envelope: STRING
+			l_addresses: STRING
+			l_address: IL_ADDRESS
 		do
 			create {LINKED_LIST [IL_ADDRESS]}Result.make
-			envelope := fetch.get_value (envelope_data_item)
+			l_envelope := fetch.value (envelope_data_item)
 			regex.compile (envelope_pattern)
-			if regex.matches (envelope) then
-				addresses := regex.captured_substring (6 + 3 * (a_position - 1))
+			if regex.matches (l_envelope) then
+				l_addresses := regex.captured_substring (6 + 3 * (a_position - 1))
 				from
 					regex.compile (Address_pattern)
-					regex.match (addresses)
+					regex.match (l_addresses)
 				until
 					not regex.has_matched
 				loop
-					address := address_from_matched_regex
-					if not address.address.is_empty then
-						Result.extend (address)
+					l_address := address_from_matched_regex
+					if not l_address.address.is_empty then
+						Result.extend (l_address)
 					end
 					regex.next_match
 				end
@@ -77,12 +77,12 @@ feature -- Basic operaion
 	subject: STRING
 			-- Parse the subject from the envelope
 		local
-			envelope: STRING
+			l_envelope: STRING
 		do
 			create Result.make_empty
-			envelope := fetch.get_value (envelope_data_item)
+			l_envelope := fetch.value (envelope_data_item)
 			regex.compile (envelope_pattern)
-			if regex.matches (envelope) then
+			if regex.matches (l_envelope) then
 				Result := regex.captured_substring (4)
 			end
 		end
@@ -90,11 +90,11 @@ feature -- Basic operaion
 	date: DATE_TIME
 			-- Parse the date from the envelope
 		local
-			date_s: STRING
+			l_date_s: STRING
 		do
-			date_s := date_string
+			l_date_s := date_string
 			regex.compile (date_pattern)
-			if regex.matches (date_s) then
+			if regex.matches (l_date_s) then
 				create Result.make (regex.captured_substring (3).to_integer, months.at (regex.captured_substring (2)), regex.captured_substring (1).to_integer, regex.captured_substring (4).to_integer, regex.captured_substring (5).to_integer, regex.captured_substring (6).to_integer)
 			else
 				create Result.make (1970, 1, 1, 0, 0, 0)
@@ -104,11 +104,11 @@ feature -- Basic operaion
 	date_string: STRING
 			-- Parse the date from the envelope
 		local
-			envelope: STRING
+			l_envelope: STRING
 		do
-			envelope := fetch.get_value (envelope_data_item)
+			l_envelope := fetch.value (envelope_data_item)
 			regex.compile (envelope_pattern)
-			if regex.matches (envelope) then
+			if regex.matches (l_envelope) then
 				Result := regex.captured_substring (2)
 			else
 				create Result.make_empty
@@ -118,11 +118,11 @@ feature -- Basic operaion
 	internaldate: DATE_TIME
 			-- Parse the internaldate
 		local
-			date_s: STRING
+			l_date_s: STRING
 		do
-			date_s := fetch.get_value (internaldate_data_item)
+			l_date_s := fetch.value (internaldate_data_item)
 			regex.compile (Internaldate_pattern)
-			if regex.matches (date_s) then
+			if regex.matches (l_date_s) then
 				create Result.make (regex.captured_substring (3).to_integer, months.at (regex.captured_substring (2)), regex.captured_substring (1).to_integer, regex.captured_substring (4).to_integer, regex.captured_substring (5).to_integer, regex.captured_substring (6).to_integer)
 			else
 				create Result.make (1970, 1, 1, 0, 0, 0)
@@ -134,11 +134,11 @@ feature -- Basic operaion
 		require
 			correct_number: a_substring_number >= 1 and a_substring_number <= 18
 		local
-			body: STRING
+			l_body: STRING
 		do
-			body := fetch.get_value (body_data_item)
+			l_body := fetch.value (body_data_item)
 			regex.compile (Body_pattern)
-			if regex.matches (body) then
+			if regex.matches (l_body) then
 				Result := regex.captured_substring (a_substring_number)
 			else
 				create Result.make_empty
@@ -171,17 +171,17 @@ feature {NONE} -- Implementation
 		require
 			regex.has_matched
 		local
-			name: STRING
-			address: STRING
+			l_name: STRING
+			l_address: STRING
 		do
-			name := regex.captured_substring (2)
+			l_name := regex.captured_substring (2)
 
 			if regex.captured_substring (4) /~ "NIL" and regex.captured_substring (6) /~ "NIL" then
-				address := regex.captured_substring (5) + "@" + regex.captured_substring (7)
+				l_address := regex.captured_substring (5) + "@" + regex.captured_substring (7)
 			else
-				create address.make_empty
+				create l_address.make_empty
 			end
-			create Result.make_with_name_and_address (name, address)
+			create Result.make_with_name_and_address (l_name, l_address)
 		end
 
 	fetch: IL_FETCH

@@ -11,7 +11,7 @@ create
 feature {NONE} -- Initialization
 
 	make_with_name_and_address (a_name: STRING; a_address: STRING)
-			-- Create with `a_name' and `a_address'
+			-- Create with `a_name' and `a_address'.
 		require
 			a_name_not_void: a_name /= Void
 			a_address_not_void: a_address /= Void
@@ -24,7 +24,7 @@ feature {NONE} -- Initialization
 		end
 
 	make_empty
-			-- Create with empty name and addresses
+			-- Create with empty name and addresses.
 		do
 			create name.make_empty
 			create address.make_empty
@@ -33,10 +33,10 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	name: STRING
-			-- The name of the address owner
+			-- The name of the address owner.
 
 	address: STRING
-			-- The address
+			-- The address.
 
 
 ;note

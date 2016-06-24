@@ -106,19 +106,19 @@ feature -- Basic Commands
 		require
 			is_connected
 		local
-			parser: IL_PARSER
-			response: IL_SERVER_RESPONSE
-			tag: STRING
+			l_parser: IL_PARSER
+			l_response: IL_SERVER_RESPONSE
+			l_tag: STRING
 		do
-			tag := get_tag
-			send_action_with_tag (tag, Capability_action, create {ARRAYED_LIST [STRING]}.make (0))
-			response := get_response (tag)
+			l_tag := get_tag
+			send_action_with_tag (l_tag, Capability_action, create {ARRAYED_LIST [STRING]}.make (0))
+			l_response := get_response (l_tag)
 			check
-				correct_response_received: response.untagged_response_count = 1 or response.is_error
+				correct_response_received: l_response.untagged_response_count = 1 or l_response.is_error
 			end
-			if not response.is_error then
-				create parser.make_from_text (response.untagged_response (0))
-				Result := parser.match_capabilities
+			if not l_response.is_error then
+				create l_parser.make_from_text (l_response.untagged_response (0))
+				Result := l_parser.match_capabilities
 			else
 				create {ARRAYED_LIST [STRING]}Result.make (0)
 			end
@@ -164,12 +164,12 @@ feature -- Not authenticated commands
 			a_user_name_not_empty: a_user_name /= Void and then not a_user_name.is_empty
 			a_password_not_empty: a_password /= Void and then not a_password.is_empty
 		local
-			args: LINKED_LIST [STRING]
+			l_args: LINKED_LIST [STRING]
 		do
-			create args.make
-			args.extend (a_user_name)
-			args.extend (a_password)
-			send_action (Login_action, args)
+			create l_args.make
+			l_args.extend (a_user_name)
+			l_args.extend (a_password)
+			send_action (Login_action, l_args)
 			network.update_imap_state (response_mgr.response (current_tag), {IL_NETWORK_STATE}.authenticated_state)
 		end
 
@@ -182,21 +182,21 @@ feature -- Authenticated commands
 		require
 			a_mailbox_name_not_empty: a_mailbox_name /= Void and then not a_mailbox_name.is_empty
 		local
-			args: LINKED_LIST [STRING]
-			response: IL_SERVER_RESPONSE
-			tag: STRING
-			parser: IL_MAILBOX_PARSER
+			l_args: LINKED_LIST [STRING]
+			l_response: IL_SERVER_RESPONSE
+			l_tag: STRING
+			l_parser: IL_MAILBOX_PARSER
 		do
 			current_mailbox.unselect
-			tag := get_tag
-			create args.make
-			args.extend (a_mailbox_name)
-			send_action_with_tag (tag, Select_action, args)
-			response := get_response (tag)
-			if not response.is_error and then response.status ~ Command_ok_label then
-				create parser.make_from_response (response, a_mailbox_name)
-				parser.parse_mailbox
-				network.update_imap_state (response, {IL_NETWORK_STATE}.selected_state)
+			l_tag := get_tag
+			create l_args.make
+			l_args.extend (a_mailbox_name)
+			send_action_with_tag (l_tag, Select_action, l_args)
+			l_response := get_response (l_tag)
+			if not l_response.is_error and then l_response.status ~ Command_ok_label then
+				create l_parser.make_from_response (l_response, a_mailbox_name)
+				l_parser.parse_mailbox
+				network.update_imap_state (l_response, {IL_NETWORK_STATE}.selected_state)
 			end
 		end
 
@@ -207,21 +207,21 @@ feature -- Authenticated commands
 		require
 			a_mailbox_name_not_empty: a_mailbox_name /= Void and then not a_mailbox_name.is_empty
 		local
-			args: LINKED_LIST [STRING]
-			response: IL_SERVER_RESPONSE
-			tag: STRING
-			parser: IL_MAILBOX_PARSER
+			l_args: LINKED_LIST [STRING]
+			l_response: IL_SERVER_RESPONSE
+			l_tag: STRING
+			l_parser: IL_MAILBOX_PARSER
 		do
 			current_mailbox.unselect
-			tag := get_tag
-			create args.make
-			args.extend (a_mailbox_name)
-			send_action_with_tag (tag, Examine_action, args)
-			response := get_response (tag)
-			if not response.is_error and then response.status ~ Command_ok_label then
-				create parser.make_from_response (response, a_mailbox_name)
-				parser.parse_mailbox
-				network.update_imap_state (response, {IL_NETWORK_STATE}.selected_state)
+			l_tag := get_tag
+			create l_args.make
+			l_args.extend (a_mailbox_name)
+			send_action_with_tag (l_tag, Examine_action, l_args)
+			l_response := get_response (l_tag)
+			if not l_response.is_error and then l_response.status ~ Command_ok_label then
+				create l_parser.make_from_response (l_response, a_mailbox_name)
+				l_parser.parse_mailbox
+				network.update_imap_state (l_response, {IL_NETWORK_STATE}.selected_state)
 			end
 		end
 
@@ -232,11 +232,11 @@ feature -- Authenticated commands
 		require
 			a_mailbox_name_not_empty: a_mailbox_name /= Void and then not a_mailbox_name.is_empty
 		local
-			args: LINKED_LIST [STRING]
+			l_args: LINKED_LIST [STRING]
 		do
-			create args.make
-			args.extend (a_mailbox_name)
-			send_action (Create_action, args)
+			create l_args.make
+			l_args.extend (a_mailbox_name)
+			send_action (Create_action, l_args)
 		end
 
 	delete_mailbox (a_mailbox_name: STRING)
@@ -246,11 +246,11 @@ feature -- Authenticated commands
 		require
 			a_mailbox_name_not_empty: a_mailbox_name /= Void and then not a_mailbox_name.is_empty
 		local
-			args: LINKED_LIST [STRING]
+			l_args: LINKED_LIST [STRING]
 		do
-			create args.make
-			args.extend (a_mailbox_name)
-			send_action (Delete_action, args)
+			create l_args.make
+			l_args.extend (a_mailbox_name)
+			send_action (Delete_action, l_args)
 		end
 
 	rename_mailbox (a_mailbox_name: STRING; a_new_name: STRING)
@@ -261,12 +261,12 @@ feature -- Authenticated commands
 			a_mailbox_name_not_empty: a_mailbox_name /= Void and then not a_mailbox_name.is_empty
 			a_new_name_not_empty: a_new_name /= Void and then not a_new_name.is_empty
 		local
-			args: LINKED_LIST [STRING]
+			l_args: LINKED_LIST [STRING]
 		do
-			create args.make
-			args.extend (a_mailbox_name)
-			args.extend (a_new_name)
-			send_action (Rename_action, args)
+			create l_args.make
+			l_args.extend (a_mailbox_name)
+			l_args.extend (a_new_name)
+			send_action (Rename_action, l_args)
 		end
 
 	subscribe (a_mailbox_name: STRING)
@@ -276,11 +276,11 @@ feature -- Authenticated commands
 		require
 			a_mailbox_name_not_empty: a_mailbox_name /= Void and then not a_mailbox_name.is_empty
 		local
-			args: LINKED_LIST [STRING]
+			l_args: LINKED_LIST [STRING]
 		do
-			create args.make
-			args.extend (a_mailbox_name)
-			send_action (Subscribe_action, args)
+			create l_args.make
+			l_args.extend (a_mailbox_name)
+			send_action (Subscribe_action, l_args)
 		end
 
 	unsubscribe (a_mailbox_name: STRING)
@@ -290,11 +290,11 @@ feature -- Authenticated commands
 		require
 			a_mailbox_name_not_empty: a_mailbox_name /= Void and then not a_mailbox_name.is_empty
 		local
-			args: LINKED_LIST [STRING]
+			l_args: LINKED_LIST [STRING]
 		do
-			create args.make
-			args.extend (a_mailbox_name)
-			send_action (Unsubscribe_action, args)
+			create l_args.make
+			l_args.extend (a_mailbox_name)
+			send_action (Unsubscribe_action, l_args)
 		end
 
 	list (a_reference_name: STRING; a_name: STRING)
@@ -305,12 +305,12 @@ feature -- Authenticated commands
 		require
 			args_not_void: a_reference_name /= Void and a_name /= Void
 		local
-			args: LINKED_LIST [STRING]
+			l_args: LINKED_LIST [STRING]
 		do
-			create args.make
-			args.extend ("%"" + a_reference_name + "%"")
-			args.extend ("%"" + a_name + "%"")
-			send_action (List_action, args)
+			create l_args.make
+			l_args.extend ("%"" + a_reference_name + "%"")
+			l_args.extend ("%"" + a_name + "%"")
+			send_action (List_action, l_args)
 		end
 
 	get_list (a_reference_name: STRING; a_name: STRING): LIST [IL_NAME]
@@ -321,20 +321,20 @@ feature -- Authenticated commands
 		require
 			args_not_void: a_reference_name /= Void and a_name /= Void
 		local
-			args: LINKED_LIST [STRING]
-			tag: STRING
-			response: IL_SERVER_RESPONSE
-			parser: IL_NAME_LIST_PARSER
+			l_args: LINKED_LIST [STRING]
+			l_tag: STRING
+			l_response: IL_SERVER_RESPONSE
+			l_parser: IL_NAME_LIST_PARSER
 		do
-			create args.make
-			args.extend ("%"" + a_reference_name + "%"")
-			args.extend ("%"" + a_name + "%"")
-			tag := get_tag
-			send_action_with_tag (tag, List_action, args)
-			response := get_response (tag)
-			if not response.is_error and then response.status ~ Command_ok_label then
-				create parser.make_from_response (response, false)
-				Result := parser.mailbox_names
+			create l_args.make
+			l_args.extend ("%"" + a_reference_name + "%"")
+			l_args.extend ("%"" + a_name + "%"")
+			l_tag := get_tag
+			send_action_with_tag (l_tag, List_action, l_args)
+			l_response := get_response (l_tag)
+			if not l_response.is_error and then l_response.status ~ Command_ok_label then
+				create l_parser.make_from_response (l_response, false)
+				Result := l_parser.mailbox_names
 			else
 				create {ARRAYED_LIST [IL_NAME]}Result.make (0)
 			end
@@ -348,12 +348,12 @@ feature -- Authenticated commands
 		require
 			args_not_void: a_reference_name /= Void and a_name /= Void
 		local
-			args: LINKED_LIST [STRING]
+			l_args: LINKED_LIST [STRING]
 		do
-			create args.make
-			args.extend ("%"" + a_reference_name + "%"")
-			args.extend ("%"" + a_name + "%"")
-			send_action (Lsub_action, args)
+			create l_args.make
+			l_args.extend ("%"" + a_reference_name + "%"")
+			l_args.extend ("%"" + a_name + "%"")
+			send_action (Lsub_action, l_args)
 		end
 
 	get_lsub (a_reference_name: STRING; a_name: STRING): LIST [IL_NAME]
@@ -364,20 +364,20 @@ feature -- Authenticated commands
 		require
 			args_not_void: a_reference_name /= Void and a_name /= Void
 		local
-			args: LINKED_LIST [STRING]
-			tag: STRING
-			response: IL_SERVER_RESPONSE
-			parser: IL_NAME_LIST_PARSER
+			l_args: LINKED_LIST [STRING]
+			l_tag: STRING
+			l_response: IL_SERVER_RESPONSE
+			l_parser: IL_NAME_LIST_PARSER
 		do
-			create args.make
-			args.extend ("%"" + a_reference_name + "%"")
-			args.extend ("%"" + a_name + "%"")
-			tag := get_tag
-			send_action_with_tag (tag, Lsub_action, args)
-			response := get_response (tag)
-			if not response.is_error and then response.status ~ Command_ok_label then
-				create parser.make_from_response (response, true)
-				Result := parser.mailbox_names
+			create l_args.make
+			l_args.extend ("%"" + a_reference_name + "%"")
+			l_args.extend ("%"" + a_name + "%"")
+			l_tag := get_tag
+			send_action_with_tag (l_tag, Lsub_action, l_args)
+			l_response := get_response (l_tag)
+			if not l_response.is_error and then l_response.status ~ Command_ok_label then
+				create l_parser.make_from_response (l_response, true)
+				Result := l_parser.mailbox_names
 			else
 				create {ARRAYED_LIST [IL_NAME]}Result.make (0)
 			end
@@ -391,20 +391,20 @@ feature -- Authenticated commands
 			a_mailbox_name_not_empty: a_mailbox_name /= Void and then not a_mailbox_name.is_empty
 			status_data_not_empty: status_data /= Void and then not status_data.is_empty
 		local
-			args: LINKED_LIST [STRING]
-			tag: STRING
-			response: IL_SERVER_RESPONSE
-			parser: IL_PARSER
+			l_args: LINKED_LIST [STRING]
+			l_tag: STRING
+			l_response: IL_SERVER_RESPONSE
+			l_parser: IL_PARSER
 		do
-			create args.make
-			args.extend (a_mailbox_name)
-			args.extend (string_from_list (status_data))
-			tag := get_tag
-			send_action_with_tag (tag, Status_action, args)
-			response := get_response (tag)
-			if not response.is_error and then response.status ~ Command_ok_label and then response.untagged_response_count > 0 then
-				create parser.make_from_text (response.untagged_responses.at (1))
-				Result := parser.status_data
+			create l_args.make
+			l_args.extend (a_mailbox_name)
+			l_args.extend (string_from_list (status_data))
+			l_tag := get_tag
+			send_action_with_tag (l_tag, Status_action, l_args)
+			l_response := get_response (l_tag)
+			if not l_response.is_error and then l_response.status ~ Command_ok_label and then l_response.untagged_response_count > 0 then
+				create l_parser.make_from_text (l_response.untagged_responses.at (1))
+				Result := l_parser.status_data
 			else
 				create Result.make (0)
 			end
@@ -421,20 +421,20 @@ feature -- Authenticated commands
 			date_time_not_void: date_time /= Void
 			message_literal_not_empty: message_literal /= Void and then not message_literal.is_empty
 		local
-			args: LINKED_LIST [STRING]
-			flags_string: STRING
+			l_args: LINKED_LIST [STRING]
+			l_flags_string: STRING
 		do
-			create args.make
-			args.extend (a_mailbox_name)
-			flags_string := string_from_list (flags)
-			if not flags_string.is_empty then
-				args.extend (flags_string)
+			create l_args.make
+			l_args.extend (a_mailbox_name)
+			l_flags_string := string_from_list (flags)
+			if not l_flags_string.is_empty then
+				l_args.extend (l_flags_string)
 			end
 			if not date_time.is_empty then
-				args.extend (date_time)
+				l_args.extend (date_time)
 			end
-			args.extend ("{" + message_literal.count.out + "}")
-			send_action (Append_action, args)
+			l_args.extend ("{" + message_literal.count.out + "}")
+			send_action (Append_action, l_args)
 			if needs_continuation then
 				send_command_continuation (message_literal)
 			end
@@ -472,50 +472,50 @@ feature -- Selected commands
 		note
 			EIS: "name=EXPUNGE", "protocol=URI", "src=https://tools.ietf.org/html/rfc3501#section-6.4.3"
 		local
-			args: LINKED_LIST [STRING]
-			tag: STRING
-			response: IL_SERVER_RESPONSE
-			parser: IL_EXPUNGE_PARSER
+			l_args: LINKED_LIST [STRING]
+			l_tag: STRING
+			l_response: IL_SERVER_RESPONSE
+			l_parser: IL_EXPUNGE_PARSER
 		do
-			create args.make
-			tag := get_tag
-			send_action_with_tag (tag, Expunge_action, args)
-			response := get_response (tag)
-			if not response.is_error and then response.status ~ Command_ok_label then
-				create parser.make_from_response (response)
-				Result := parser.parse_expunged
+			create l_args.make
+			l_tag := get_tag
+			send_action_with_tag (l_tag, Expunge_action, l_args)
+			l_response := get_response (l_tag)
+			if not l_response.is_error and then l_response.status ~ Command_ok_label then
+				create l_parser.make_from_response (l_response)
+				Result := l_parser.parse_expunged
 			else
 				create {ARRAYED_LIST [INTEGER]}Result.make (0)
 			end
 		end
 
-	search (charset: STRING; criterias: LIST [STRING]): LIST [INTEGER]
-			-- Return a list of message that match the criterias `criterias'
+	search (a_charset: STRING; a_criterias: LIST [STRING]): LIST [INTEGER]
+			-- Return a list of message that match the criterias `a_criterias'
 		note
 			EIS: "name=SEARCH", "protocol=URI", "src=https://tools.ietf.org/html/rfc3501#section-6.4.4"
 		require
-			criterias_not_void: criterias /= Void
+			criterias_not_void: a_criterias /= Void
 		local
-			args: LINKED_LIST [STRING]
-			tag: STRING
-			response: IL_SERVER_RESPONSE
-			parser: IL_PARSER
+			l_args: LINKED_LIST [STRING]
+			l_tag: STRING
+			l_response: IL_SERVER_RESPONSE
+			l_parser: IL_PARSER
 		do
-			tag := get_tag
-			create args.make
-			if charset /= Void and then not charset.is_empty then
-				args.extend ("CHARSET " + charset)
+			l_tag := get_tag
+			create l_args.make
+			if a_charset /= Void and then not a_charset.is_empty then
+				l_args.extend ("CHARSET " + a_charset)
 			end
 			across
-				criterias as criteria
+				a_criterias as criteria
 			loop
-				args.extend (criteria.item)
+				l_args.extend (criteria.item)
 			end
-			send_action_with_tag (tag, Search_action, args)
-			response := get_response (tag)
-			if not response.is_error and then response.status ~ Command_ok_label and then response.untagged_response_count = 1 then
-				create parser.make_from_text (response.untagged_responses.at (1))
-				Result := parser.search_results
+			send_action_with_tag (l_tag, Search_action, l_args)
+			l_response := get_response (l_tag)
+			if not l_response.is_error and then l_response.status ~ Command_ok_label and then l_response.untagged_response_count = 1 then
+				create l_parser.make_from_text (l_response.untagged_responses.at (1))
+				Result := l_parser.search_results
 			else
 				create {ARRAYED_LIST [INTEGER]}Result.make (0)
 			end
@@ -668,12 +668,12 @@ feature -- Selected commands
 			a_sequence_set_not_void: a_sequence_set /= Void
 			a_mailbox_name_not_empty: a_mailbox_name /= Void and then not a_mailbox_name.is_empty
 		local
-			args: LINKED_LIST [STRING]
+			l_args: LINKED_LIST [STRING]
 		do
-			create args.make
-			args.extend (a_sequence_set.string)
-			args.extend (a_mailbox_name)
-			send_action (Copy_action, args)
+			create l_args.make
+			l_args.extend (a_sequence_set.string)
+			l_args.extend (a_mailbox_name)
+			send_action (Copy_action, l_args)
 		end
 
 	copy_messages_uid (a_sequence_set: IL_SEQUENCE_SET; a_mailbox_name: STRING)
@@ -685,12 +685,12 @@ feature -- Selected commands
 			a_sequence_set_not_void: a_sequence_set /= Void
 			a_mailbox_name_not_empty: a_mailbox_name /= Void and then not a_mailbox_name.is_empty
 		local
-			args: LINKED_LIST [STRING]
+			l_args: LINKED_LIST [STRING]
 		do
-			create args.make
-			args.extend (a_sequence_set.string)
-			args.extend (a_mailbox_name)
-			send_action (Uid_copy_action, args)
+			create l_args.make
+			l_args.extend (a_sequence_set.string)
+			l_args.extend (a_mailbox_name)
+			send_action (Uid_copy_action, l_args)
 		end
 
 	store (a_sequence_set: IL_SEQUENCE_SET; data_item_name: STRING; data_item_values: LIST [STRING])
@@ -715,14 +715,14 @@ feature -- Selected commands
 			data_item_name_not_empty: data_item_name /= Void and then not data_item_name.is_empty
 			data_item_value_not_void: data_item_values /= Void
 		local
-			tag: STRING
-			response: IL_SERVER_RESPONSE
+			l_tag: STRING
+			l_response: IL_SERVER_RESPONSE
 		do
-			tag := get_tag
-			store_implementation (tag, a_sequence_set, data_item_name, data_item_values, false)
-			response := get_response (tag)
-			if not response.is_error and then response.status ~ Command_ok_label then
-				Result := response.fetch_responses
+			l_tag := get_tag
+			store_implementation (l_tag, a_sequence_set, data_item_name, data_item_values, false)
+			l_response := get_response (l_tag)
+			if not l_response.is_error and then l_response.status ~ Command_ok_label then
+				Result := l_response.fetch_responses
 			else
 				create Result.make (0)
 			end
@@ -752,14 +752,14 @@ feature -- Selected commands
 			data_item_name_not_empty: data_item_name /= Void and then not data_item_name.is_empty
 			data_item_value_not_void: data_item_values /= Void
 		local
-			tag: STRING
-			response: IL_SERVER_RESPONSE
+			l_tag: STRING
+			l_response: IL_SERVER_RESPONSE
 		do
-			tag := get_tag
-			store_implementation (tag, a_sequence_set, data_item_name, data_item_values, true)
-			response := get_response (tag)
-			if not response.is_error and then response.status ~ Command_ok_label then
-				Result := response.fetch_responses
+			l_tag := get_tag
+			store_implementation (l_tag, a_sequence_set, data_item_name, data_item_values, true)
+			l_response := get_response (l_tag)
+			if not l_response.is_error and then l_response.status ~ Command_ok_label then
+				Result := l_response.fetch_responses
 			else
 				create Result.make (0)
 			end
@@ -838,20 +838,20 @@ feature -- Basic Operations
 			Result /= Void
 		end
 
-	get_response (tag: STRING): IL_SERVER_RESPONSE
-			-- Returns the server response that the server gave for command with tag `tag'
+	get_response (a_tag: STRING): IL_SERVER_RESPONSE
+			-- Returns the server response that the server gave for command with a_tag `tag'
 		require
-			tag_not_empty: tag /= Void and then not tag.is_empty
+			tag_not_empty: a_tag /= Void and then not a_tag.is_empty
 		local
-			parser: IL_PARSER
-			tag_number: INTEGER
+			l_parser: IL_PARSER
+			l_tag_number: INTEGER
 		do
-			create parser.make_from_text (tag)
-			tag_number := parser.number
+			create l_parser.make_from_text (a_tag)
+			l_tag_number := l_parser.number
 			check
-				correct_tag: tag_number > 0 and tag_number <= current_tag_number
+				correct_tag: l_tag_number > 0 and l_tag_number <= current_tag_number
 			end
-			Result := response_mgr.response (tag)
+			Result := response_mgr.response (a_tag)
 		ensure
 			Result /= Void
 		end
@@ -938,23 +938,23 @@ feature {NONE} -- Implementation
 			a_sequence_set_not_void: a_sequence_set /= Void
 			data_item_not_empty: data_items /= Void and then not data_items.is_empty
 		local
-			args: LINKED_LIST [STRING]
-			tag: STRING
-			response: IL_SERVER_RESPONSE
+			l_args: LINKED_LIST [STRING]
+			l_tag: STRING
+			l_response: IL_SERVER_RESPONSE
 		do
-			create args.make
-			args.extend (a_sequence_set.string)
-			args.extend (data_items)
-			tag := get_tag
+			create l_args.make
+			l_args.extend (a_sequence_set.string)
+			l_args.extend (data_items)
+			l_tag := get_tag
 			if is_uid then
-				send_action_with_tag (tag, Uid_fetch_action, args)
+				send_action_with_tag (l_tag, Uid_fetch_action, l_args)
 			else
-				send_action_with_tag (tag, Fetch_action, args)
+				send_action_with_tag (l_tag, Fetch_action, l_args)
 			end
 
-			response := get_response (tag)
-			if response.status ~ Command_ok_label then
-				Result := response.fetch_responses
+			l_response := get_response (l_tag)
+			if l_response.status ~ Command_ok_label then
+				Result := l_response.fetch_responses
 			else
 				create Result.make (0)
 			end
@@ -967,23 +967,23 @@ feature {NONE} -- Implementation
 		require
 			a_sequence_set_not_void: a_sequence_set /= Void
 		local
-			fetch_return: HASH_TABLE [IL_FETCH, NATURAL]
-			data_items: LINKED_LIST [STRING]
+			l_fetch_return: HASH_TABLE [IL_FETCH, NATURAL]
+			l_data_items: LINKED_LIST [STRING]
 		do
-			create data_items.make
-			data_items.extend (body_data_item)
-			data_items.extend (envelope_data_item)
-			data_items.extend (flags_data_item)
-			data_items.extend (internaldate_data_item)
-			data_items.extend (header_data_item)
-			data_items.extend (size_data_item)
-			data_items.extend (text_data_item)
-			data_items.extend (uid_data_item)
-			fetch_return := fetch_implementation (a_sequence_set, string_from_list (data_items), is_uid)
+			create l_data_items.make
+			l_data_items.extend (body_data_item)
+			l_data_items.extend (envelope_data_item)
+			l_data_items.extend (flags_data_item)
+			l_data_items.extend (internaldate_data_item)
+			l_data_items.extend (header_data_item)
+			l_data_items.extend (size_data_item)
+			l_data_items.extend (text_data_item)
+			l_data_items.extend (uid_data_item)
+			l_fetch_return := fetch_implementation (a_sequence_set, string_from_list (l_data_items), is_uid)
 
-			create Result.make (fetch_return.count)
+			create Result.make (l_fetch_return.count)
 			across
-				fetch_return as f
+				l_fetch_return as f
 			loop
 				Result.put (create {IL_MESSAGE}.make_from_fetch (f.item), f.key)
 			end
@@ -999,16 +999,16 @@ feature {NONE} -- Implementation
 			data_item_name_not_empty: data_item_name /= Void and then not data_item_name.is_empty
 			data_item_value_not_void: data_item_values /= Void
 		local
-			args: LINKED_LIST [STRING]
+			l_args: LINKED_LIST [STRING]
 		do
-			create args.make
-			args.extend (a_sequence_set.string)
-			args.extend (data_item_name)
-			args.extend (string_from_list (data_item_values))
+			create l_args.make
+			l_args.extend (a_sequence_set.string)
+			l_args.extend (data_item_name)
+			l_args.extend (string_from_list (data_item_values))
 			if is_uid then
-				send_action_with_tag (a_tag, Uid_store_action, args)
+				send_action_with_tag (a_tag, Uid_store_action, l_args)
 			else
-				send_action_with_tag (a_tag, Store_action, args)
+				send_action_with_tag (a_tag, Store_action, l_args)
 			end
 		end
 

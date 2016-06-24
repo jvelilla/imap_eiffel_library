@@ -20,7 +20,7 @@ create
 feature {NONE} -- Initialization
 
 	make_from_text (a_text: STRING)
-			-- Create a parser which will parse `a_text'
+			-- Create a parser which will parse `a_text'.
 		do
 			Precursor (a_text)
 			create fetch.make_with_sequence_number (0)
@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 feature -- Basic operations
 
 	sequence_number: NATURAL
-			-- Returns the sequence number fetched from `text' or returns 0 if `text' did not match
+			-- Returns the sequence number fetched from `text' or returns 0 if `text' did not match.
 		do
 			regex.compile (First_line_fetch_pattern)
 			if regex.matches (text) then
@@ -124,127 +124,127 @@ feature {NONE} -- Implementation
 	fetch_body
 			-- Parses body data if text matches it
 		local
-			new_data: TUPLE [INTEGER, STRING]
-			body: STRING
+			l_new_data: TUPLE [INTEGER, STRING]
+			l_body: STRING
 		do
 			regex.compile (Body_pattern)
 			if regex.matches (text) then
-				body := regex.captured_substring (2)
-				create new_data.default_create
-				new_data.put (body.count, 1)
-				new_data.put (body, 2)
-				fetch.data.extend (new_data, regex.captured_substring (1))
+				l_body := regex.captured_substring (2)
+				create l_new_data.default_create
+				l_new_data.put (l_body.count, 1)
+				l_new_data.put (l_body, 2)
+				fetch.data.extend (l_new_data, regex.captured_substring (1))
 			end
 		end
 
 	fetch_bodyb
 			-- Parses a body data if text matches it
 		local
-			size: INTEGER
+			l_size: INTEGER
 		do
 			regex.compile (Bodyb_pattern)
 			if regex.matches (text) then
 				fetch.set_last_key (regex.captured_substring (1))
-				size := regex.captured_substring (4).to_integer
-				fetch.last_item.put (size, 1)
+				l_size := regex.captured_substring (4).to_integer
+				fetch.last_item.put (l_size, 1)
 				fetch.last_item.put (create {STRING}.make_empty, 2)
-				fetch.set_literal_left (size)
+				fetch.set_literal_left (l_size)
 			end
 		end
 
 	fetch_flags
 			-- Parses flags data if text matches it
 		local
-			new_data: TUPLE [INTEGER, STRING]
-			flags: STRING
+			l_new_data: TUPLE [INTEGER, STRING]
+			l_flags: STRING
 		do
 			regex.compile (Flags_pattern)
 			if regex.matches (text) then
-				flags := regex.captured_substring (2)
-				create new_data.default_create
-				new_data.put (flags.count, 1)
-				new_data.put (flags, 2)
-				fetch.data.extend (new_data, regex.captured_substring (1))
+				l_flags := regex.captured_substring (2)
+				create l_new_data.default_create
+				l_new_data.put (l_flags.count, 1)
+				l_new_data.put (l_flags, 2)
+				fetch.data.extend (l_new_data, regex.captured_substring (1))
 			end
 		end
 
 	fetch_bodystructure
 			-- Parses bodystructure data if text matches it
 		local
-			new_data: TUPLE [INTEGER, STRING]
-			bodystructure: STRING
+			l_new_data: TUPLE [INTEGER, STRING]
+			l_bodystructure: STRING
 		do
 			regex.compile (Bodystructure_pattern)
 			if regex.matches (text) then
-				bodystructure := regex.captured_substring (2)
-				create new_data.default_create
-				new_data.put (bodystructure.count, 1)
-				new_data.put (bodystructure, 2)
-				fetch.data.extend (new_data, regex.captured_substring (1))
+				l_bodystructure := regex.captured_substring (2)
+				create l_new_data.default_create
+				l_new_data.put (l_bodystructure.count, 1)
+				l_new_data.put (l_bodystructure, 2)
+				fetch.data.extend (l_new_data, regex.captured_substring (1))
 			end
 		end
 
 	fetch_envelope
 			-- Parses envelope data if text matches it
 		local
-			new_data: TUPLE [INTEGER, STRING]
-			envelope: STRING
+			l_new_data: TUPLE [INTEGER, STRING]
+			l_envelope: STRING
 		do
 			regex.compile (Envelope_pattern)
 			if regex.matches (text) then
-				envelope := regex.captured_substring (2)
-				create new_data.default_create
-				new_data.put (envelope.count, 1)
-				new_data.put (envelope, 2)
-				fetch.data.extend (new_data, regex.captured_substring (1))
+				l_envelope := regex.captured_substring (2)
+				create l_new_data.default_create
+				l_new_data.put (l_envelope.count, 1)
+				l_new_data.put (l_envelope, 2)
+				fetch.data.extend (l_new_data, regex.captured_substring (1))
 			end
 		end
 
 	fetch_internaldate
 			-- Parses internaldate data if text matches it
 		local
-			new_data: TUPLE [INTEGER, STRING]
-			internaldate: STRING
+			l_new_data: TUPLE [INTEGER, STRING]
+			l_internaldate: STRING
 		do
 			regex.compile (Internaldate_pattern)
 			if regex.matches (text) then
-				internaldate := regex.captured_substring (2)
-				create new_data.default_create
-				new_data.put (internaldate.count, 1)
-				new_data.put (internaldate, 2)
-				fetch.data.extend (new_data, regex.captured_substring (1))
+				l_internaldate := regex.captured_substring (2)
+				create l_new_data.default_create
+				l_new_data.put (l_internaldate.count, 1)
+				l_new_data.put (l_internaldate, 2)
+				fetch.data.extend (l_new_data, regex.captured_substring (1))
 			end
 		end
 
 	fetch_size
 			-- Parses size data if text matches it
 		local
-			new_data: TUPLE [INTEGER, STRING]
-			size: STRING
+			l_new_data: TUPLE [INTEGER, STRING]
+			l_size: STRING
 		do
 			regex.compile (Size_pattern)
 			if regex.matches (text) then
-				size := regex.captured_substring (2)
-				create new_data.default_create
-				new_data.put (size.count, 1)
-				new_data.put (size, 2)
-				fetch.data.extend (new_data, regex.captured_substring (1))
+				l_size := regex.captured_substring (2)
+				create l_new_data.default_create
+				l_new_data.put (l_size.count, 1)
+				l_new_data.put (l_size, 2)
+				fetch.data.extend (l_new_data, regex.captured_substring (1))
 			end
 		end
 
 	fetch_uid
 			-- Parses uid data if text matches it
 		local
-			new_data: TUPLE [INTEGER, STRING]
-			a_uid: STRING
+			l_new_data: TUPLE [INTEGER, STRING]
+			l_uid: STRING
 		do
 			regex.compile (Uid_pattern)
 			if regex.matches (text) then
-				a_uid := regex.captured_substring (2)
-				create new_data.default_create
-				new_data.put (a_uid.count, 1)
-				new_data.put (a_uid, 2)
-				fetch.data.extend (new_data, regex.captured_substring (1))
+				l_uid := regex.captured_substring (2)
+				create l_new_data.default_create
+				l_new_data.put (l_uid.count, 1)
+				l_new_data.put (l_uid, 2)
+				fetch.data.extend (l_new_data, regex.captured_substring (1))
 			end
 		end
 

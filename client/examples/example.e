@@ -30,10 +30,10 @@ feature {NONE} -- Constants
 	Server_name: STRING = "your_server.ch"
 			-- The address of the server
 
-	user_name: STRING = "your_name@your_server.ch"
+	User_name: STRING = "your_name@your_server.ch"
 			-- The user name
 
-	password: STRING = "qwertz"
+	Password: STRING = "qwertz"
 			-- The password for `user_name'
 
 feature -- Access

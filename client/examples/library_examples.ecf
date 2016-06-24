@@ -9,7 +9,7 @@
 		<precompile name="base_pre" location="$ISE_PRECOMP\base-safe.ecf"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
 		<library name="gobo_regexp" location="$ISE_LIBRARY\library\gobo\gobo_regexp-safe.ecf"/>
-		<library name="imap_client_lib" location="\home\basile\Studium\other\EiffelProject\IMAP\client\src\imap_client_lib.ecf"/>
+		<library name="imap_client_lib" location="..\src\imap_client_lib.ecf"/>
 		<library name="time" location="$ISE_LIBRARY\library\time\time-safe.ecf"/>
 		<cluster name="library_examples" location=".\" recursive="true">
 			<file_rule>

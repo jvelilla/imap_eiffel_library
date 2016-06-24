@@ -12,7 +12,7 @@ create
 feature {NONE} -- Initialization
 
 	make
-			-- Create the mailbox
+			-- Create the mailbox.
 		do
 			unselect
 		end

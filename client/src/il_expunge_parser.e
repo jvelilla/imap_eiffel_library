@@ -17,7 +17,7 @@ create
 feature {NONE} -- Initialization
 
 	make_from_response (a_response: IL_SERVER_RESPONSE)
-			-- Create a parser which will parse `a_response'
+			-- Create a parser which will parse `a_response'.
 		require
 			correct_response: a_response /= Void and then not a_response.is_error
 		do
@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 feature -- Basic Operations
 
 	parse_expunged: LIST [INTEGER]
-			-- Parse the response and return the list of deleted messages
+			-- Parse the response and return the list of deleted messages.
 		do
 			create {LINKED_LIST [INTEGER]}Result.make
 			from

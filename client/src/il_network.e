@@ -51,24 +51,24 @@ feature -- Basic functions
 			Result := socket.is_connected and state /= Not_connected_state
 		end
 
-	send_command (tag: STRING; command: STRING; arguments: LIST [STRING])
-			-- Send the command `command' with the tag `tag' and the arguments in the list `arguments'
+	send_command (a_tag: STRING; a_command: STRING; a_arguments: LIST [STRING])
+			-- Send the command `a_command' with the tag `a_tag' and the arguments in the list `a_arguments'
 		require
-			tag_not_empty: not tag.is_empty
-			command_not_empty: not command.is_empty
+			tag_not_empty: not a_tag.is_empty
+			command_not_empty: not a_command.is_empty
 			command_continuation_not_needed: not needs_continuation
 		local
-			str: STRING
+			l_str: STRING
 		do
-			str := tag + " " + command
-			if arguments /= Void then
+			l_str := a_tag + " " + a_command
+			if a_arguments /= Void then
 				across
-					arguments as argument
+					a_arguments as argument
 				loop
-					str := str + " " + argument.item
+					l_str := l_str + " " + argument.item
 				end
 			end
-			send_raw_command (str)
+			send_raw_command (l_str)
 		end
 
 	send_command_continuation (a_continuation: STRING)
